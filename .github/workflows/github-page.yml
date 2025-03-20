@@ -1,0 +1,34 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # 当推送到 main 分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9" # 使用 Python 3.9 或更高版本
+
+      - name: Install mkdocs and dependencies
+        run: |
+          pip install mkdocs
+          pip install mkdocs-material # 如果使用 mkdocs-material 主题
+
+      - name: Build Documentation
+        run: |
+          mkdocs build --site-dir public # 将静态文件输出到 ./public 目录
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public # 部署 ./public 目录中的静态文件

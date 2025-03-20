@@ -1,0 +1,44 @@
+name: Update READMEs from Private Repos
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每小时运行一次
+  workflow_dispatch: # 手动触发
+
+jobs:
+  update-readmes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Public Repo
+        uses: actions/checkout@v2
+
+      - name: Read Repo Settings
+        id: repo-settings
+        run: |
+          $repos = Get-Content -Path RepoSettings.txt
+          $repos -join "," | Write-Output "::set-output name=repos::$($_)"
+        shell: pwsh
+
+      - name: Process Repos
+        run: |
+          $repos = "${{ steps.repo-settings.outputs.repos }}".Split(",")
+          foreach ($repo in $repos) {
+              $repoName = ($repo -split "/")[-1] -replace ".git", ""
+              Write-Host "Processing $repoName..."
+              git clone --depth=1 --quiet "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@$repo" temp-repo
+              Copy-Item -Path "temp-repo/README.md" -Destination "./$repoName.md" -Force
+              Remove-Item -Recurse -Force -Path temp-repo
+          }
+        shell: pwsh
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add *.md
+          git commit -m 'Update READMEs from private repos'
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh

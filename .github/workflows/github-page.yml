@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # 当推送到 main 分支时触发
+      - main
 
 jobs:
   deploy:
@@ -20,12 +20,9 @@ jobs:
 
       - name: Install mkdocs and dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install mkdocs
-          pip install mkdocs-material # 如果使用 mkdocs-material 主题
-
-      - name: Build Documentation
-        run: |
-          mkdocs build --site-dir public # 将静态文件输出到 ./public 目录
+          pip install mkdocs-material
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

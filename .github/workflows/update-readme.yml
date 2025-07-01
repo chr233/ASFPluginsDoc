@@ -13,12 +13,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Execute download-docs.ps1
+      - name: Fetch Readme Files From RepoList
         shell: pwsh
         run: |
           . .\download-docs.ps1
 
-          $Token = ${{ secrets.GH_TOKEN }}
+          $Token = "${{ secrets.GH_TOKEN }}"
           $RepoFileName = "RepoNameList.txt"
           $Proxy = $null
           $DocsDir = "docs"

@@ -18,7 +18,7 @@ jobs:
         run: |
           . .\download-docs.ps1
 
-          $Token = ${{ secrets.GITHUB_TOKEN }}
+          $Token = ${{ secrets.GH_TOKEN }}
           $RepoFileName = "RepoNameList.txt"
           $Proxy = $null
           $DocsDir = "docs"

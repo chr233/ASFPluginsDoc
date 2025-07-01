@@ -6,7 +6,10 @@ function Get-RepoListFromFile {
     $lines = Get-Content $filePath | Where-Object { $_.Trim() -ne "" }
     $repoList = @()
     foreach ($line in $lines) {
-        $repoList += "$userName/$line"
+        if ($line -match "^\s*#") {
+            continue
+        }
+        $repoList += $line.Trim()
     }
     return $repoList
 }
@@ -32,6 +35,19 @@ function Get-GitHubUserName {
     }
 }
 
+function Remove-RedeemsDir {
+    param (
+        [string]$DocsDir = "docs"
+    )
+    if (Test-Path $DocsDir) {
+        Remove-Item -Path $DocsDir -Recurse -Force
+        Write-Host "已删除目录 $DocsDir"
+    }
+    else {
+        Write-Host "目录 $DocsDir 不存在，无需删除"
+    }
+}
+
 function Get-GitHubRepoReadmes {
     param (
         [string]$token,
@@ -48,24 +64,38 @@ function Get-GitHubRepoReadmes {
     if ($proxy) {
         $invokeParams["Proxy"] = $proxy
     }
-    try {
-        $items = Invoke-RestMethod @invokeParams
-        foreach ($item in $items) {
-            if ($item.type -eq "file" -and $item.name -match "^README") {
-                $outPath = Join-Path $tmpDir $item.name
-                if (-not (Test-Path $outPath)) {
-                    $downloadParams = @{ Uri = $item.download_url; Headers = $headers }
-                    if ($proxy) {
-                        $downloadParams["Proxy"] = $proxy
+
+    $maxRetry = 3
+    $tryCount = 0
+    $success = $false
+
+    while (-not $success -and $tryCount -lt $maxRetry) {
+        try {
+            $items = Invoke-RestMethod @invokeParams
+            foreach ($item in $items) {
+                if ($item.type -eq "file" -and $item.name -match "^README") {
+                    $outPath = Join-Path $tmpDir $item.name
+                    if (-not (Test-Path $outPath)) {
+                        $downloadParams = @{ Uri = $item.download_url; Headers = $headers }
+                        if ($proxy) {
+                            $downloadParams["Proxy"] = $proxy
+                        }
+                        $content = Invoke-RestMethod @downloadParams
+                        Set-Content -Path $outPath -Value $content
                     }
-                    $content = Invoke-RestMethod @downloadParams
-                    Set-Content -Path $outPath -Value $content
                 }
             }
+            $success = $true
         }
-    }
-    catch {
-        Write-Host "$repoFullName 获取失败"
+        catch {
+            $tryCount++
+            if ($tryCount -lt $maxRetry) {
+                Write-Host "$repoFullName 获取失败，重试第 $tryCount 次..."
+                Start-Sleep -Seconds 2
+            } else {
+                Write-Host "$repoFullName 获取失败，已重试 $maxRetry 次，跳过。"
+            }
+        }
     }
 }
 
@@ -75,16 +105,13 @@ function Move-ReadmesToDocs {
         [string]$docsDir = "docs"
     )
     $tmpDir = "tmp"
-    $repoName = ($repoFullName -split "/")[-1]
-    $targetDir = Join-Path $docsDir $repoName
-    if (-not (Test-Path $targetDir)) {
-        New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+    $dstDir = Join-Path $docsDir $repoFullName
+
+    if (-not (Test-Path $dstDir)) {
+        New-Item -ItemType Directory -Path $dstDir | Out-Null
     }
-    Get-ChildItem -Path $tmpDir -Filter "README*" | ForEach-Object {
-        $fileName = $_.Name
-        $destPath = Join-Path $targetDir $fileName
-        Move-Item $_.FullName $destPath -Force
-    }
+
+    Move-Item -Path (Join-Path $tmpDir "README*.md") -Destination $dstDir -Force -ErrorAction SilentlyContinue
 }
 
 function Update-MarkdownIndex {
@@ -95,7 +122,7 @@ function Update-MarkdownIndex {
 
     # 语言映射表
     $langMap = @{
-        "README.md"    = "Chinese"
+        "README.md"    = "中文说明"
         "README.en.md" = "English"
         "README.ru.md" = "Russian"
     }
@@ -116,7 +143,7 @@ function Update-MarkdownIndex {
             $lang = $langMap[$fileName]
             if (-not $lang) {
                 # 处理未知语言
-                if ($fileName -match "^README\.(\w+)\.md$") {
+                if ($fileName -match "^README(?:\.|-)?([a-zA-z0-9-]*)?\.md$") {
                     $code = $Matches[1]
                     switch ($code) {
                         "en" { $lang = "English" }
@@ -153,12 +180,18 @@ function Test {
         Write-Error "Can not get GitHub username!!!"
         exit 1
     }
+    Write-Host "Current user: $userName"
+
+    Remove-RedeemsDir -DocsDir $DocsDir
+
     $repoList = Get-RepoListFromFile -filePath $RepoFileName -userName $userName
     foreach ($repo in $repoList) {
         Write-Host "Processing: $repo"
-        Get-GitHubRepoReadmes -token $Token -repoFullName $repo -proxy $Proxy
+        Get-GitHubRepoReadmes -token $Token -repoFullName "$userName/$repo" -proxy $Proxy
         Move-ReadmesToDocs -repoFullName $repo -docsDir $DocsDir
     }
+
+    Remove-RedeemsDir -DocsDir "tmp"
 
     Update-MarkdownIndex -DocsDir $DocsDir
 }

@@ -32,12 +32,18 @@ jobs:
               Write-Error "Can not get GitHub username!!!"
               exit 1
           }
+          Write-Host "Current user: $userName"
+
+          Remove-RedeemsDir -DocsDir $DocsDir
+
           $repoList = Get-RepoListFromFile -filePath $RepoFileName -userName $userName
           foreach ($repo in $repoList) {
               Write-Host "Processing: $repo"
               Get-GitHubRepoReadmes -token $Token -repoFullName $repo -proxy $Proxy
               Move-ReadmesToDocs -repoFullName $repo -docsDir $DocsDir
           }
+
+          Remove-RedeemsDir -DocsDir "tmp"
 
           Update-MarkdownIndex -DocsDir $DocsDir
 

@@ -3,9 +3,9 @@ $indexPath = Join-Path $docsDir "index.md"
 
 # 语言映射表
 $langMap = @{
-    "README.md"      = "中文"
-    "README.en.md"   = "英语"
-    "README.ru.md"   = "俄文"
+    "README.md"      = "Chinese"
+    "README.en.md"   = "English"
+    "README.ru.md"   = "Russion"
 }
 
 # 收集所有子文件夹

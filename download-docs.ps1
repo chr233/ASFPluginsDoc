@@ -71,10 +71,10 @@ function Get-GitHubRepoReadmes {
 
 function Move-ReadmesToDocs {
     param (
-        [string]$repoFullName
+        [string]$repoFullName,
+        [string]$docsDir = "docs"
     )
     $tmpDir = "tmp"
-    $docsDir = "docs"
     $repoName = ($repoFullName -split "/")[-1]
     $targetDir = Join-Path $docsDir $repoName
     if (-not (Test-Path $targetDir)) {
@@ -85,6 +85,82 @@ function Move-ReadmesToDocs {
         $destPath = Join-Path $targetDir $fileName
         Move-Item $_.FullName $destPath -Force
     }
+}
+
+function Update-MarkdownIndex {
+    param (
+        [string]$DocsDir = "docs"
+    )
+    $indexPath = Join-Path $DocsDir "index.md"
+
+    # 语言映射表
+    $langMap = @{
+        "README.md"    = "Chinese"
+        "README.en.md" = "English"
+        "README.ru.md" = "Russian"
+    }
+
+    # 收集所有子文件夹
+    $folders = Get-ChildItem -Path $DocsDir -Directory | Sort-Object Name
+
+    $lines = @("# 仓库文档索引", "")
+
+    foreach ($folder in $folders) {
+        $repoName = $folder.Name
+        $readmes = Get-ChildItem -Path $folder.FullName -Filter "README*.md" | Sort-Object Name
+        if ($readmes.Count -eq 0) { continue }
+        $lines += "## $repoName"
+        $lines += ""
+        foreach ($readme in $readmes) {
+            $fileName = $readme.Name
+            $lang = $langMap[$fileName]
+            if (-not $lang) {
+                # 处理未知语言
+                if ($fileName -match "^README\.(\w+)\.md$") {
+                    $code = $Matches[1]
+                    switch ($code) {
+                        "en" { $lang = "English" }
+                        "ru" { $lang = "Russian" }
+                        default { $lang = $code }
+                    }
+                }
+                else {
+                    $lang = "Chinese"
+                }
+            }
+            $relPath = "$repoName/$fileName"
+            $lines += "- [$fileName]($relPath)（$lang）"
+        }
+    }
+
+    Set-Content -Path $indexPath -Value $lines -Encoding UTF8
+    Write-Host "已生成 $indexPath"
+}
+
+function Test {
+    param (
+        [string]$Token,
+        [string]$RepoFileName = "RepoNameList.txt",
+        [string]$Proxy = $null,
+        [string]$DocsDir = "docs"
+    )
+    if (-not (Test-Path $RepoFileName)) {
+        Write-Error "File $RepoFileName not found!!!"
+        exit 1
+    }
+    $userName = Get-GitHubUserName -token $Token -proxy $Proxy
+    if (-not $userName) {
+        Write-Error "Can not get GitHub username!!!"
+        exit 1
+    }
+    $repoList = Get-RepoListFromFile -filePath $RepoFileName -userName $userName
+    foreach ($repo in $repoList) {
+        Write-Host "Processing: $repo"
+        Get-GitHubRepoReadmes -token $Token -repoFullName $repo -proxy $Proxy
+        Move-ReadmesToDocs -repoFullName $repo -docsDir $DocsDir
+    }
+
+    Update-MarkdownIndex -DocsDir $DocsDir
 }
 
 # $repoFileName = "RepoNameList.txt"

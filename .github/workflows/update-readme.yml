@@ -53,6 +53,6 @@ jobs:
             git commit -m "Update documentation"
             $repo = "${{ github.repository }}"
             $branch = "${{ github.ref_name }}"
-            $token = $env:GITHUB_TOKEN
+            $token = "${{ secrets.GH_TOKEN }}"
             git push "https://x-access-token:$token@github.com/$repo.git" HEAD:$branch
           }

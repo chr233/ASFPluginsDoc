@@ -2,98 +2,76 @@
 
 ## ASFAchievementManagerEx
 
-- [README.en.md](ASFAchievementManagerEx/README.en.md)（英语）
-- [README.md](ASFAchievementManagerEx/README.md)（中文）
-- [README.ru.md](ASFAchievementManagerEx/README.ru.md)（俄文）
-
+- [README.en.md](ASFAchievementManagerEx/README.en.md)（English）
+- [README.md](ASFAchievementManagerEx/README.md)（Chinese）
+- [README.ru.md](ASFAchievementManagerEx/README.ru.md)（Russian）
 ## ASFAddFreeGames
 
-- [README.md](ASFAddFreeGames/README.md)（中文）
-- [README.ru-RU.md](ASFAddFreeGames/README.ru-RU.md)（中文）
-
+- [README.md](ASFAddFreeGames/README.md)（Chinese）
+- [README.ru-RU.md](ASFAddFreeGames/README.ru-RU.md)（Chinese）
 ## ASFAwardTool
 
-- [README.md](ASFAwardTool/README.md)（中文）
-
+- [README.md](ASFAwardTool/README.md)（Chinese）
 ## ASFAwardToolLite
 
-- [README.md](ASFAwardToolLite/README.md)（中文）
-
+- [README.md](ASFAwardToolLite/README.md)（Chinese）
 ## ASFBatchCmd
 
-- [README.md](ASFBatchCmd/README.md)（中文）
-
+- [README.md](ASFBatchCmd/README.md)（Chinese）
 ## ASFBroadcast
 
-- [README.md](ASFBroadcast/README.md)（中文）
-
+- [README.md](ASFBroadcast/README.md)（Chinese）
 ## ASFBuffBot
 
-- [README.en.md](ASFBuffBot/README.en.md)（英语）
-- [README.md](ASFBuffBot/README.md)（中文）
-- [README.ru.md](ASFBuffBot/README.ru.md)（俄文）
-
+- [README.en.md](ASFBuffBot/README.en.md)（English）
+- [README.md](ASFBuffBot/README.md)（Chinese）
+- [README.ru.md](ASFBuffBot/README.ru.md)（Russian）
 ## ASFChatDumper
 
-- [README.md](ASFChatDumper/README.md)（中文）
-
+- [README.md](ASFChatDumper/README.md)（Chinese）
 ## ASFCSGO
 
-- [README.md](ASFCSGO/README.md)（中文）
-
+- [README.md](ASFCSGO/README.md)（Chinese）
 ## ASFCsgoTransfer
 
-- [README.md](ASFCsgoTransfer/README.md)（中文）
-
+- [README.md](ASFCsgoTransfer/README.md)（Chinese）
 ## ASFDailyExecute
 
-- [README.md](ASFDailyExecute/README.md)（中文）
-
+- [README.md](ASFDailyExecute/README.md)（Chinese）
 ## ASFEnhance
 
-- [README.en.md](ASFEnhance/README.en.md)（英语）
-- [README.md](ASFEnhance/README.md)（中文）
-- [README.ru.md](ASFEnhance/README.ru.md)（俄文）
-
+- [README.en.md](ASFEnhance/README.en.md)（English）
+- [README.md](ASFEnhance/README.md)（Chinese）
+- [README.ru.md](ASFEnhance/README.ru.md)（Russian）
 ## ASFEnhanceAdapterDemoPlugin
 
-- [README.md](ASFEnhanceAdapterDemoPlugin/README.md)（中文）
-
+- [README.md](ASFEnhanceAdapterDemoPlugin/README.md)（Chinese）
 ## ASFLevelUpBot
 
-- [README.md](ASFLevelUpBot/README.md)（中文）
-
+- [README.md](ASFLevelUpBot/README.md)（Chinese）
 ## ASFLike
 
-- [README.md](ASFLike/README.md)（中文）
-
+- [README.md](ASFLike/README.md)（Chinese）
 ## ASFMultipleProxy
 
-- [README.md](ASFMultipleProxy/README.md)（中文）
-
+- [README.md](ASFMultipleProxy/README.md)（Chinese）
 ## ASFOAuth
 
-- [README.md](ASFOAuth/README.md)（中文）
-
+- [README.md](ASFOAuth/README.md)（Chinese）
 ## ASFPasswordChanger
 
-- [README.md](ASFPasswordChanger/README.md)（中文）
-
+- [README.md](ASFPasswordChanger/README.md)（Chinese）
 ## ASFPlaytime
 
-- [README.md](ASFPlaytime/README.md)（中文）
-
+- [README.md](ASFPlaytime/README.md)（Chinese）
 ## ASFRidsTool
 
-- [README.md](ASFRidsTool/README.md)（中文）
-
+- [README.md](ASFRidsTool/README.md)（Chinese）
 ## ASFTf2Purchase
 
-- [README.md](ASFTf2Purchase/README.md)（中文）
-
+- [README.md](ASFTf2Purchase/README.md)（Chinese）
 ## ASFTradeExtension
 
-- [README.en.md](ASFTradeExtension/README.en.md)（英语）
-- [README.md](ASFTradeExtension/README.md)（中文）
-- [README.ru.md](ASFTradeExtension/README.ru.md)（俄文）
-
+- [README.en.md](ASFTradeExtension/README.en.md)（English）
+- [README.md](ASFTradeExtension/README.md)（Chinese）
+- [README.ru.md](ASFTradeExtension/README.ru.md)（Russian）
